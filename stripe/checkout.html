@@ -140,12 +140,12 @@
 <script>
     $.ajax({
         type: "GET",
-        url: "https://www.5miles.com/active/cmtCurrency",
+        url: "https://meteorolite.cybermiles.io/api/cmtCurrency",
         dataType: 'json',
         success: function(result) {
             console.log('result: ', result)
-            // var cmt = result && result.data && result.data.data && result.data.data.CMT.quote || {}
-            var cmt = result && result.data && result.data.CMT && result.data.CMT.quote || {}
+            var cmt = result && result.data && result.data.data && result.data.data.CMT.quote || {}
+            // var cmt = result && result.data && result.data.CMT && result.data.CMT.quote || {}
             var price = cmt.USD && cmt.USD.price || 0
             var cmts = Math.floor(100 / price)
             if (!price) return
