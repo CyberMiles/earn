@@ -19,19 +19,71 @@
     <script src="https://js.stripe.com/v3"></script>
 
     <script src="../js/browser.js"></script>
+    <script>!function(n){var e=n.document,t=e.documentElement,i=750,o=i/32,a="orientationchange"in n?"orientationchange":"resize",d=function(){var n=t.clientWidth||320,n=n>750?750:320>n?320:n;var r=n/o>16?16:n/o;t.style.fontSize=r+"px"};e.addEventListener&&n.addEventListener(a,d,!1),d()}(window);</script>
+
+    <style>
+        *{
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+        html {
+            -ms-text-size-adjust: 100%; /* 2 */
+            -webkit-text-size-adjust: 100%; /* 2 */
+            height: 100%;
+            overflow-x: hidden;
+            font-size: 16px;
+        }
+        body{
+            margin: 0;
+            padding: 0;
+            font-family: "Roboto, Open Sans, Segoe UI, sans-serif";
+            text-size-adjust: 100%;
+        }
+        .logo {
+            margin: 2rem auto 1.25rem;
+        }
+        .btn {
+            min-width: 7rem;
+        }
+        .btn.get-app {
+            border-radius: 1.5rem;
+            background-image: linear-gradient(to right, #273fe8, #8663ea 55%, #c96be1);
+            background-size: 110%;
+            font-size: 1rem;
+            font-weight: 500;
+            padding: .375rem .8125rem;
+            color: #fff;
+            margin: 1.75rem auto 1.25rem;
+        }
+        .table {
+            border: 1px solid #dee2e6;
+            margin-top: 2rem;
+            font-size: 1rem;
+        }
+        .table td, .table th {
+            vertical-align: middle;
+        }
+        .btn-success.disabled, .btn-success:disabled {
+            opacity: .3;
+        }
+        .text-muted {
+            word-break: break-all;
+        }
+        .btn:active,
+        .btn:focus {
+            box-shadow: none;
+            outline: none;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
-
     <p class="text-center">
-        <br/>
-        <img src="../icons/icon-144x144.png" width="120"/>
-        <br/>
+        <img class="logo" src="../icons/icon-192x192.png" height="80"/>
+        <br>
         <span id="user-address" class="text-muted"></span>
-        <br/><br/>
-        <a href="/#services" class="btn btn-outline-info" role="button">How to use SMC</a>
-        <a href="http://onelink.to/v248ze" id="cmt-wallet" style="display:none" class="btn btn-info" role="button">Get CMT Wallet</a>
-        <br/>
+        <br>
+        <a href="http://onelink.to/v248ze" id="cmt-wallet" style="display:none" class="btn get-app" role="button">Get CyberMiles App</a>
     </p>
 
     <div id="error-message" class="alert alert-danger" style="display:none"></div>
@@ -39,25 +91,26 @@
     <table class="table table-striped">
         <tbody>
             <tr>
-                <td>Try $5 to see what this is about!</td>
-                <td><button id="checkout-button-sku_F7FPJglnUcBd1W" class="btn btn-success" type="button">Pay $5</button></td>
+                <td>Pay $50</td>
+                <td class="text-right"><button id="checkout-button-sku_F7FPJglnUcBd1W" class="btn btn-success" type="button">Get *** CMTs</button></td>
             </tr>
             <tr>
-                <td>Get 10 SMCs</td>
-                <td><button id="checkout-button-sku_F7FUmEQHUmw06B" class="btn btn-success" type="button">Pay $10</button></td>
+                <td>Pay $100</td>
+                <td class="text-right"><button id="checkout-button-sku_F7FUmEQHUmw06B" class="btn btn-success" type="button">Get *** CMTs</button></td>
             </tr>
             <tr>
-                <td>Get 20 SMCs</td>
-                <td><button id="checkout-button-sku_F7FUxLBnHO6rqN" class="btn btn-success" type="button">Pay $20</button></td>
+                <td>Pay $150</td>
+                <td class="text-right"><button id="checkout-button-sku_F7FUxLBnHO6rqN" class="btn btn-success" type="button">Get *** CMTs</button></td>
             </tr>
             <tr>
-                <td>Get 50 SMCs</td>
-                <td><button id="checkout-button-sku_F7FVoSpJ7WUk2L" class="btn btn-success" type="button">Pay $50</button></td>
+                <td>Pay $200</td>
+                <td class="text-right"><button id="checkout-button-sku_F7FVoSpJ7WUk2L" class="btn btn-success" type="button">Get *** CMTs</button></td>
             </tr>
         </tbody>
     </table>
 </div>
 <script>
+
     $(function () {
         var webBrowser = new AppLink();
         webBrowser.openBrowser();
@@ -75,25 +128,25 @@
 
                     var skus = ["sku_F7FPJglnUcBd1W", "sku_F7FUmEQHUmw06B", "sku_F7FUxLBnHO6rqN", "sku_F7FVoSpJ7WUk2L"];
                     skus.forEach(function (sku, index) {
-                    $('#checkout-button-' + sku).click(function () {
-                        stripe.redirectToCheckout({
-                        items: [{sku: sku, quantity: 1}],
-                        clientReferenceId: userAddress,
-                        successUrl: window.location.protocol + '//www.sanmarcoscoin.com/dapp/stripe/success.html',
-                        cancelUrl: window.location.protocol + '//www.sanmarcoscoin.com/dapp/stripe/canceled.html',
-                        })
-                        .then(function (result) {
-                        if (result.error) {
-                            $('#error-message').css("display", "block");
-                            $('#error-message').text(result.error.message);
-                        }
+                        $('#checkout-button-' + sku).click(function () {
+                            stripe.redirectToCheckout({
+                                items: [{sku: sku, quantity: 1}],
+                                clientReferenceId: userAddress,
+                                successUrl: window.location.protocol + '//www.sanmarcoscoin.com/dapp/stripe/success.html',
+                                cancelUrl: window.location.protocol + '//www.sanmarcoscoin.com/dapp/stripe/canceled.html',
+                            })
+                            .then(function (result) {
+                                if (result.error) {
+                                    $('#error-message').css("display", "block");
+                                    $('#error-message').text(result.error.message);
+                                }
+                            });
                         });
-                    });
                     });
                 }
             });
         } catch (error) {
-            $('#user-address').text("You must open this page in the CMT Wallet mobile app");
+            $('#user-address').text("You must open this page in CyberMiles App");
             $('#cmt-wallet').css("display", "inline-block");
             $('.btn-success').prop('disabled', true);
         }
