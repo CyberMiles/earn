@@ -18,7 +18,7 @@
     <script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
     <script src="https://js.stripe.com/v3"></script>
 
-    <script src="../js/browser.js"></script>
+    <!-- <script src="../js/browser.js"></script> -->
     <script>!function(n){var e=n.document,t=e.documentElement,i=750,o=i/32,a="orientationchange"in n?"orientationchange":"resize",d=function(){var n=t.clientWidth||320,n=n>750?750:320>n?320:n;var r=n/o>16?16:n/o;t.style.fontSize=r+"px"};e.addEventListener&&n.addEventListener(a,d,!1),d()}(window);</script>
 
     <style>
@@ -66,6 +66,9 @@
         .btn-success.disabled, .btn-success:disabled {
             opacity: .3;
         }
+        .btn-success{
+            min-width: 145px;
+        }
         .text-muted {
             word-break: break-all;
         }
@@ -74,17 +77,27 @@
             box-shadow: none;
             outline: none;
         }
+        .currency {
+            font-size: 17px;
+            margin-bottom: 8px;
+            font-weight: 500;
+            margin-top: 20px;
+        }
+        .tip {
+            font-size: 12px;
+        }
     </style>
 </head>
 <body>
 <div class="container">
-    <p class="text-center">
+    <div class="text-center">
         <img class="logo" src="../icons/icon-192x192.png" height="80"/>
         <br>
-        <span id="user-address" class="text-muted"></span>
-        <br>
-        <a href="http://onelink.to/v248ze" id="cmt-wallet" style="display:none" class="btn get-app" role="button">Get CyberMiles App</a>
-    </p>
+        <p id="user-address" class="text-muted"></p>
+        <p class="currency">$1 USD = <span id="currency"></span> CMTs</p>
+        <p class="text-muted tip">The price of CMT is from Coinmarketcap in real time</p>
+        <a href="https://app.cybermiles.io/" id="cmt-wallet" style="display:none" class="btn get-app" role="button">Get CyberMiles App</a>
+    </div>
 
     <div id="error-message" class="alert alert-danger" style="display:none"></div>
 
@@ -92,28 +105,60 @@
         <tbody>
             <tr>
                 <td>Pay $50</td>
-                <td class="text-right"><button id="checkout-button-sku_F7FPJglnUcBd1W" class="btn btn-success" type="button">Get *** CMTs</button></td>
+                <td class="text-right"><button id="checkout-button-sku_F7FPJglnUcBd1W" class="btn btn-success" type="button">Get <span class="usd50"></span> CMTs</button></td>
             </tr>
             <tr>
                 <td>Pay $100</td>
-                <td class="text-right"><button id="checkout-button-sku_F7FUmEQHUmw06B" class="btn btn-success" type="button">Get *** CMTs</button></td>
+                <td class="text-right"><button id="checkout-button-sku_F7FUmEQHUmw06B" class="btn btn-success" type="button">Get <span class="usd100"></span> CMTs</button></td>
             </tr>
             <tr>
                 <td>Pay $150</td>
-                <td class="text-right"><button id="checkout-button-sku_F7FUxLBnHO6rqN" class="btn btn-success" type="button">Get *** CMTs</button></td>
+                <td class="text-right"><button id="checkout-button-sku_F7FUxLBnHO6rqN" class="btn btn-success" type="button">Get <span class="usd150"></span> CMTs</button></td>
             </tr>
             <tr>
                 <td>Pay $200</td>
-                <td class="text-right"><button id="checkout-button-sku_F7FVoSpJ7WUk2L" class="btn btn-success" type="button">Get *** CMTs</button></td>
+                <td class="text-right"><button id="checkout-button-sku_F7FVoSpJ7WUk2L" class="btn btn-success" type="button">Get <span class="usd200"></span> CMTs</button></td>
             </tr>
         </tbody>
     </table>
 </div>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-120065893-17"></script>
 <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-120065893-17');
+
+    var gaSend = function(action, category) {
+        typeof gtag !== 'undefined' && gtag('event', action, {event_category: category})
+    }
+</script>
+
+<script>
+    $.ajax({
+        type: "GET",
+        url: "http://meteorolite.cybermiles.io/api/cmtCurrency",
+        dataType: 'json',
+        success: function(result) {
+            var cmt = result && result.data && result.data.data && result.data.data.CMT.quote || {}
+            var price = cmt.USD && cmt.USD.price || 0
+            console.log('price: ', price)
+            var cmts = Math.floor(100 / price)
+
+            $('#currency').text(cmts / 100)
+            $('.usd50').text(cmts * 0.5)
+            $('.usd100').text(cmts)
+            $('.usd150').text(cmts * 1.5)
+            $('.usd200').text(cmts * 2)
+        }
+    })
 
     $(function () {
-        var webBrowser = new AppLink();
-        webBrowser.openBrowser();
+        // var webBrowser = new AppLink();
+        // webBrowser.openBrowser();
 
         var stripe = Stripe('pk_live_jTM3GrXwtasjL48356ywj6Tc00sVzYe4EH');
 
@@ -132,8 +177,8 @@
                             stripe.redirectToCheckout({
                                 items: [{sku: sku, quantity: 1}],
                                 clientReferenceId: userAddress,
-                                successUrl: window.location.protocol + '//www.sanmarcoscoin.com/dapp/stripe/success.html',
-                                cancelUrl: window.location.protocol + '//www.sanmarcoscoin.com/dapp/stripe/canceled.html',
+                                successUrl: window.location.protocol + '//earn.cybermiles.io/stripe/success',
+                                cancelUrl: window.location.protocol + '//earn.cybermiles.io/stripe/canceled',
                             })
                             .then(function (result) {
                                 if (result.error) {
