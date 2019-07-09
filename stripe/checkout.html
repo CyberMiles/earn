@@ -94,8 +94,8 @@
         <img class="logo" src="../icons/icon-192x192.png" height="80"/>
         <br>
         <p id="user-address" class="text-muted"></p>
-        <p class="currency">$1 USD = <span id="currency"></span> CMTs</p>
-        <p class="text-muted tip">The price of CMT is from Coinmarketcap in real time</p>
+        <p class="currency" style="display: none">$1 USD = <span id="currency"></span> CMTs</p>
+        <p class="text-muted tip" style="display: none">The price of CMT is from Coinmarketcap in real time</p>
         <a href="https://app.cybermiles.io/" id="cmt-wallet" style="display:none" class="btn get-app" role="button">Get CyberMiles App</a>
     </div>
 
@@ -140,25 +140,31 @@
 <script>
     $.ajax({
         type: "GET",
-        url: "http://meteorolite.cybermiles.io/api/cmtCurrency",
+        url: "https://5miles.com/active/cmtCurrency",
         dataType: 'json',
         success: function(result) {
-            var cmt = result && result.data && result.data.data && result.data.data.CMT.quote || {}
+            console.log('result: ', result)
+            // var cmt = result && result.data && result.data.data && result.data.data.CMT.quote || {}
+            var cmt = result && result.data && result.data.CMT && result.data.CMT.quote || {}
             var price = cmt.USD && cmt.USD.price || 0
-            console.log('price: ', price)
             var cmts = Math.floor(100 / price)
+            if (!price) return
+            console.log('price: ', price)
 
             $('#currency').text(cmts / 100)
             $('.usd50').text(cmts * 0.5)
             $('.usd100').text(cmts)
             $('.usd150').text(cmts * 1.5)
             $('.usd200').text(cmts * 2)
+
+            $('.currency').show()
+            $('.tip').show()
         }
     })
 
     $(function () {
-        var webBrowser = new AppLink();
-        webBrowser.openBrowser();
+        // var webBrowser = new AppLink();
+        // webBrowser.openBrowser();
 
         var stripe = Stripe('pk_live_jTM3GrXwtasjL48356ywj6Tc00sVzYe4EH');
 
