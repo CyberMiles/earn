@@ -18,7 +18,7 @@
     <script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
     <script src="https://js.stripe.com/v3"></script>
 
-    <!-- <script src="../js/browser.js"></script> -->
+    <script src="../js/browser.js"></script>
     <script>!function(n){var e=n.document,t=e.documentElement,i=750,o=i/32,a="orientationchange"in n?"orientationchange":"resize",d=function(){var n=t.clientWidth||320,n=n>750?750:320>n?320:n;var r=n/o>16?16:n/o;t.style.fontSize=r+"px"};e.addEventListener&&n.addEventListener(a,d,!1),d()}(window);</script>
 
     <style>
@@ -157,8 +157,8 @@
     })
 
     $(function () {
-        // var webBrowser = new AppLink();
-        // webBrowser.openBrowser();
+        var webBrowser = new AppLink();
+        webBrowser.openBrowser();
 
         var stripe = Stripe('pk_live_jTM3GrXwtasjL48356ywj6Tc00sVzYe4EH');
 
